@@ -46,22 +46,25 @@
   *************************************************************************************************
 *)
 
+{$I OpenCV.inc}
 unit ocv.nonfree;
 
 interface
 
-//uses windows;
-
-function initModule_nonfree(): LongBool; cdecl;
+{$IFNDEF DelphiOCVVersion_30}
+function initModule_nonfree(): ByteBool; cdecl;
+{$ENDIF}
 
 implementation
 
 uses ocv.lib;
 
-function initModule_nonfree; external nonfree_lib index 894;
+{$IFNDEF DelphiOCVVersion_30}
+function initModule_nonfree; external nonfree_lib index 895;
 
 initialization
 
 initModule_nonfree;
+{$ENDIF}
 
 end.
