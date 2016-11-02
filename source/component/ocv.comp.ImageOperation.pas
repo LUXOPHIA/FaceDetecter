@@ -2707,24 +2707,29 @@ procedure TocvCommonMathOperation.GetImagesForTransorm(out Source1: IocvImage; o
 Var
   s1, s2, M: IocvImage;
 begin
-  Source1 := VideoSource.Image;
-  DoGetSourceImage(s2);
-  DoGetMaskImage(M);
-  if Assigned(s2) and ((s1.Width <> s2.Width) or (s1.height <> s2.height)) then
+  if Assigned(VideoSource) then
   begin
-    Source2 := s1.Same;
-    cvResize(s2.IpImage, Source2.IpImage, Integer(TransformInterpolation));
-  end
-  else
-    Source2 := s2;
+    Source1 := VideoSource.Image;
+    DoGetSourceImage(s2);
+    DoGetMaskImage(M);
+    if Assigned(s2) and ((s1.Width <> s2.Width) or (s1.height <> s2.height)) then
+    begin
+      Source2 := s1.Same;
+      cvResize(s2.IpImage, Source2.IpImage, Integer(TransformInterpolation));
+    end
+    else
+      Source2 := s2;
 
-  if Assigned(M) and ((s1.Width <> M.Width) or (s1.height <> M.height)) then
-  begin
-    Mask := s1.Same;
-    cvResize(M.IpImage, Mask.IpImage, Integer(TransformInterpolation));
+    if Assigned(M) and ((s1.Width <> M.Width) or (s1.height <> M.height)) then
+    begin
+      Mask := s1.Same;
+      cvResize(M.IpImage, Mask.IpImage, Integer(TransformInterpolation));
+    end
+    else
+      Mask := M;
   end
   else
-    Mask := M;
+    Source2 := Source1;
 end;
 
 procedure TocvCommonMathOperation.SetVideoSource_Source2(const Value: IocvDataSource);
@@ -3484,7 +3489,7 @@ begin
       eopNone:
         begin
           Destanation := Source;
-          Exit;
+          Exit(True);
         end;
       eopSature:
         Sature(Step, Source.IpImage, iImage);
@@ -3539,7 +3544,7 @@ GetRegisteredImageOperations.RegisterIOClass(TocvCvtColorOperation, 'ColorOperat
 GetRegisteredImageOperations.RegisterIOClass(TocvResizeOperation, 'Resize');
 GetRegisteredImageOperations.RegisterIOClass(TocvLogicOperation, 'Logic');
 GetRegisteredImageOperations.RegisterIOClass(TocvLogicSOperation, 'LogicS');
-GetRegisteredImageOperations.RegisterIOClass(TocvEditor,'Editor');
+GetRegisteredImageOperations.RegisterIOClass(TocvEditor, 'Editor');
 
 finalization
 
