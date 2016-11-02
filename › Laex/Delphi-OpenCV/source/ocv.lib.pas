@@ -35,8 +35,9 @@
 
 *)
 
-{$I OpenCV.inc}
 unit ocv.lib;
+
+{$I OpenCV.inc}
 
 interface
 
@@ -44,7 +45,7 @@ const
 {$IFDEF DelphiOCVVersion_29}
   CV_VERSION_EPOCH = '2';
   CV_VERSION_MAJOR = '4';
-  CV_VERSION_MINOR = '11';
+  CV_VERSION_MINOR = '13';
   CV_VERSION_REVISION = '0';
 {$ELSEIF DEFINED(DelphiOCVVersion_30)}
   CV_VERSION_EPOCH = '3';
@@ -69,6 +70,7 @@ const
 {$ENDIF}
 {$ELSE}
 {$ENDIF}
+  // -------------------------------
   core_lib =
 {$IFDEF MSWINDOWS}
     CV_DLL_DIR + 'opencv_' +
@@ -89,6 +91,7 @@ const
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 highgui_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -108,6 +111,27 @@ highgui_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
+features2d_lib = {$IFDEF MSWINDOWS}
+  CV_DLL_DIR + 'opencv_' +
+{$IFDEF DelphiOCVVersion_29}
+  'features2d' +
+{$ELSEIF DEFINED( DelphiOCVVersion_30)}
+  'world' +
+{$ENDIF}
+  CV_VERSION_DLL {$IFDEF DEBUG} + 'd'{$ENDIF} + '.dll';
+{$ELSE}
+{$IFDEF MACOS}
+  'opencv_features2d.dylib';
+{$ELSE}
+{$IFDEF ANDROID}
+  'libopencv_features2d.so';
+{$ELSE}
+  'libopencv_features2d.so';
+{$ENDIF}
+{$ENDIF}
+{$ENDIF}
+// -------------------------------
 imgproc_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -127,6 +151,7 @@ imgproc_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 objdetect_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -146,6 +171,7 @@ objdetect_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 legacy_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -165,6 +191,7 @@ legacy_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 calib3d_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -184,6 +211,7 @@ calib3d_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 tracking_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -203,6 +231,7 @@ tracking_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 nonfree_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -222,6 +251,7 @@ nonfree_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 opencv_classes_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_classes' + CV_VERSION_DLL {$IFDEF DEBUG} + 'd'{$ENDIF} + '.dll';
 {$ELSE}
@@ -235,6 +265,7 @@ opencv_classes_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
 opencv_photo_lib = {$IFDEF MSWINDOWS}
   CV_DLL_DIR + 'opencv_' +
 {$IFDEF DelphiOCVVersion_29}
@@ -254,6 +285,31 @@ opencv_photo_lib = {$IFDEF MSWINDOWS}
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+// -------------------------------
+opencv_contrib_lib = {$IFDEF MSWINDOWS}
+  CV_DLL_DIR + 'opencv_' +
+{$IFDEF DelphiOCVVersion_29}
+  'contrib' +
+{$ELSEIF DEFINED( DelphiOCVVersion_30)}
+  'world' +
+{$ENDIF}
+  CV_VERSION_DLL {$IFDEF DEBUG} + 'd'{$ENDIF} + '.dll';
+{$ELSE}
+{$IFDEF MACOS}
+  'opencv_contrib.dylib';
+{$ELSE}
+{$IFDEF ANDROID}
+  'libopencv_contrib.so';
+{$ELSE}
+  'libopencv_contrib.so';
+{$ENDIF}
+{$ENDIF}
+{$ENDIF}
+// -------------------------------
+//
+//
+// -------------------------------
+//
 {$IFDEF SAFELOADLIB}
 function ocvLoadLibrary(const Name: String): Cardinal;
 function ocvFreeLibrary(const LibHandle: Cardinal; const Remove: Boolean = true): Boolean;
@@ -283,10 +339,12 @@ begin
   Halt(1);
 end;
 
+{$IFDEF USE_STUB_FOR_MISS_FUNC}
 procedure STUB_PROC;
 begin
   ocvErrorMessage('STUB: Call missing functions');
 end;
+{$ENDIF}
 
 Type
   TOCVLibHandles = TDictionary<String, Cardinal>;
@@ -298,7 +356,9 @@ function ocvLoadLibrary(const Name: String): Cardinal;
 begin
   if not OCVLibHandles.TryGetValue(Name, Result) then
   begin
-    Result := LoadLibrary(LPCWSTR(Name));
+{$R-}
+    Result := LoadLibrary(LPCWSTR(@Name[1]));
+{$R+}
     if Result = 0 then
       ocvErrorMessage('Can not load DLL: ' + Name);
     OCVLibHandles.Add(Name, Result);
