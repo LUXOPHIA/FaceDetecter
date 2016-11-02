@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{ED485C95-69F2-4FAC-9F64-1BE105F4F90C}</ProjectGuid>
-        <ProjectVersion>18.0</ProjectVersion>
+        <ProjectVersion>18.1</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <MainSource>FaceDetect.dpr</MainSource>
         <Base>True</Base>
@@ -188,14 +188,14 @@
         <DCCReference Include="Main.pas">
             <Form>Form1</Form>
         </DCCReference>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\LUX.Vision.OpenCV.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\LUX.Vision.OpenCV.Detect.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.core_c.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.imgproc.types_c.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.imgproc_c.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.lib.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.core.types_c.pas"/>
-        <DCCReference Include="_LIBRARY\LUX.idea\» Vision\» OpenCV\› Laex\Delphi-OpenCV\source\ocv.objdetect_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.core_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.imgproc.types_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.imgproc_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.lib.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.objdetect_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\› Laex\Delphi-OpenCV\source\ocv.core.types_c.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\LUX.Vision.OpenCV.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\LUX.Vision.OpenCV.Detect.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -258,9 +258,15 @@
                     <Source Name="MainSource">FaceDetect.dpr</Source>
                 </Source>
             </Delphi.Personality>
-            <Deployment Version="2">
+            <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\FaceDetect.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>FaceDetect.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -280,9 +286,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\FaceDetect.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\FaceDetect.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
-                        <RemoteName>FaceDetect.exe</RemoteName>
+                        <RemoteName>FaceDetect.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -292,27 +303,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -364,17 +360,20 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="iOSDevice64">
+                    <Platform Name="Linux64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Android">
@@ -427,12 +426,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\x86</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
+                <DeployClass Name="AndroidLibnativeX86File"/>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
@@ -515,11 +509,11 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice64">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -543,7 +537,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectOSXEntitlements">
                     <Platform Name="OSX32">
-                        <RemoteDir>../</RemoteDir>
+                        <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -666,18 +660,34 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
