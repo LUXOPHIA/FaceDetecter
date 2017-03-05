@@ -42,7 +42,8 @@ uses
 {$ENDIF}
   ocv.core.types_c,
   ocv.highgui_c,
-  ocv.comp.Types;
+  ocv.comp.Types,
+  ocv.lock;
 
 type
   TocvCameraCaptureSource =
@@ -86,7 +87,7 @@ type
     FOnNotifyData: TOnOcvNotify;
     FOnNoData: TNotifyEvent;
     FThreadDelay: Integer;
-    FLock: TCriticalSection;
+    FLock: TOCVLock;
   public
     constructor Create(CreateSuspended: Boolean);
     destructor Destroy; override;
@@ -280,6 +281,7 @@ Var
 {$ELSE}
   frame: pIplImage;
 {$ENDIF}
+  Image: IocvImage;
 begin
   while not Terminated do
     if Assigned(FCapture) then
@@ -301,21 +303,17 @@ begin
           if Assigned(frame) then
           begin
             if Assigned(OnNotifyData) then
-              Synchronize(
-                procedure
-                Var
-                  Image: IocvImage;
-                begin
+            begin
 {$IFDEF DelphiOCVVersion_30}
-                  I.InitFromMat(frame);
-                  Image := TocvImage.CreateClone(@I);
+              I.InitFromMat(frame);
+              Image := TocvImage.CreateClone(@I);
 {$ELSE}
-                  Image := TocvImage.CreateClone(frame);
+              Image := TocvImage.CreateClone(frame);
 {$ENDIF}
-                  OnNotifyData(Self, Image);
-                  Image := nil;
-                end);
-            Sleep(FThreadDelay);
+              OnNotifyData(Self, Image);
+              Image := nil;
+              Sleep(FThreadDelay);
+            end;
           end
           else if Assigned(OnNoData) then
             OnNoData(Self);
@@ -553,7 +551,7 @@ constructor TocvCustomSourceThread.Create(CreateSuspended: Boolean);
 begin
   inherited;
   FThreadDelay := 10;
-  FLock := TCriticalSection.Create;
+  FLock := TOCVLock.Create;
 end;
 
 destructor TocvCustomSourceThread.Destroy;
