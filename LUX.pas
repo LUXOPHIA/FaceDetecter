@@ -8,18 +8,39 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      PPByte = ^PByte;
 
-     PInt8   = ^Int8;
-     PUInt8  = ^UInt8;
-     PInt16  = ^Int16;
-     PUInt16 = ^UInt16;
-     PInt32  = ^Int32;
-     PUInt32 = ^UInt32;
+     //-------------------------------------------------------------------------
 
-     PIntPtr  = ^IntPtr;
-     PUIntPtr = ^UIntPtr;
+     PUInt8   = ^UInt8  ;  PInt8   = ^Int8  ;
+     PUInt16  = ^UInt16 ;  PInt16  = ^Int16 ;
+     PUInt32  = ^UInt32 ;  PInt32  = ^Int32 ;
+     PUIntPtr = ^UIntPtr;  PIntPtr = ^IntPtr;
 
-     TArray2<TValue_> = array of TArray <TValue_>;
-     TArray3<TValue_> = array of TArray2<TValue_>;
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TArray2/3<>
+
+     TArray2<T> = array of TArray <T>;
+     TArray3<T> = array of TArray2<T>;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TConstProc/Func<>
+
+     TConstProc<TA         > = reference to procedure( const A:TA                                     );
+     TConstProc<TA,TB      > = reference to procedure( const A:TA; const B:TB                         );
+     TConstProc<TA,TB,TC   > = reference to procedure( const A:TA; const B:TB; const C:TC             );
+     TConstProc<TA,TB,TC,TD> = reference to procedure( const A:TA; const B:TB; const C:TC; const D:TD );
+
+     TConstFunc<TA,         TResult> = reference to function( const A:TA                                     ) :TResult;
+     TConstFunc<TA,TB,      TResult> = reference to function( const A:TA; const B:TB                         ) :TResult;
+     TConstFunc<TA,TB,TC,   TResult> = reference to function( const A:TA; const B:TB; const C:TC             ) :TResult;
+     TConstFunc<TA,TB,TC,TD,TResult> = reference to function( const A:TA; const B:TB; const C:TC; const D:TD ) :TResult;
+
+     TConstProc1<T>         = reference to procedure( const A:T       );
+     TConstProc2<T,TResult> = reference to procedure( const A,B:T     );
+     TConstProc3<T,TResult> = reference to procedure( const A,B,C:T   );
+     TConstProc4<T,TResult> = reference to procedure( const A,B,C,D:T );
+
+     TConstFunc1<T,TResult> = reference to function( const A:T       ) :TResult;
+     TConstFunc2<T,TResult> = reference to function( const A,B:T     ) :TResult;
+     TConstFunc3<T,TResult> = reference to function( const A,B,C:T   ) :TResult;
+     TConstFunc4<T,TResult> = reference to function( const A,B,C,D:T ) :TResult;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -113,6 +134,28 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInterfacedBase
+
+     TInterfacedBase = class( TObject, IInterface )
+     private
+     protected
+       function QueryInterface( const IID_:TGUID; out Obj_ ) :HResult; stdcall;
+       function _AddRef :Integer; stdcall;
+       function _Release :Integer; stdcall;
+     public
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIdleTask
+
+     TIdleTask = class
+     private
+     protected class var
+       _Task :ITask;
+     public
+       ///// メソッド
+       class procedure Run( const Proc_:TThreadProcedure; const Delay_:Integer = 500 );
+     end;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIter< TValue_ >
 
      TIter< TValue_ > = class
@@ -203,9 +246,7 @@ const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
       CRLF = #13#10;
 
-var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
-
-    _ThreadPool_ :TThreadPool;
+//var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
@@ -285,6 +326,7 @@ function MaxI( const Vs_:array of Double ) :Integer; overload;
 function RealMod( const X_,Range_:Integer ) :Integer; overload;
 function RealMod( const X_,Range_:Int64 ) :Int64; overload;
 
+{$IF Defined( MACOS ) and Defined( MSWINDOWS ) }
 function RevBytes( const Value_:Word ) :Word; overload;
 function RevBytes( const Value_:Smallint ) :Smallint; overload;
 
@@ -295,8 +337,11 @@ function RevBytes( const Value_:Single ) :Single; overload;
 function RevBytes( const Value_:UInt64 ) :UInt64; overload;
 function RevBytes( const Value_:Int64 ) :Int64; overload;
 function RevBytes( const Value_:Double ) :Double; overload;
+{$ENDIF}
 
+{$IF Defined( MACOS ) and Defined( MSWINDOWS ) }
 function CharsToStr( const Cs_:TArray<AnsiChar> ) :AnsiString;
+{$ENDIF}
 
 function FileToBytes( const FileName_:string ) :TBytes;
 
@@ -492,6 +537,54 @@ begin
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInterfacedBase
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TInterfacedBase.QueryInterface( const IID_:TGUID; out Obj_ ) :HResult;
+begin
+     if GetInterface( IID_, Obj_ ) then Result := 0
+                                   else Result := E_NOINTERFACE;
+end;
+
+function TInterfacedBase._AddRef :Integer;
+begin
+     Result := 0;
+end;
+
+function TInterfacedBase._Release :Integer;
+begin
+     Result := 0;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIdleTask
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+class procedure TIdleTask.Run( const Proc_:TThreadProcedure; const Delay_:Integer = 500 );
+begin
+     if Assigned( _Task ) then _Task.Cancel;
+
+     _Task := TTask.Run( procedure
+     begin
+          Sleep( Delay_ );
+
+          if TTask.CurrentTask.Status = TTaskStatus.Running then TThread.Queue( nil, Proc_ );
+     end );
+end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIter< TValue_ >
 
@@ -1466,6 +1559,8 @@ end;
 
 //------------------------------------------------------------------------------
 
+{$IF Defined( MACOS ) and Defined( MSWINDOWS ) }
+
 function RevBytes( const Value_:Word ) :Word;
 asm
 {$IFDEF CPUX64 }
@@ -1550,7 +1645,11 @@ begin
      Result := PDouble( @V )^;
 end;
 
+{$ENDIF}
+
 //------------------------------------------------------------------------------
+
+{$IF Defined( MACOS ) and Defined( MSWINDOWS ) }
 
 function CharsToStr( const Cs_:TArray<AnsiChar> ) :AnsiString;
 var
@@ -1564,6 +1663,8 @@ begin
                                   else Result := Result + Cs_[ I ];
      end;
 end;
+
+{$ENDIF}
 
 //------------------------------------------------------------------------------
 
@@ -1590,10 +1691,6 @@ initialization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 初期
 
      Randomize;
 
-     _ThreadPool_ := TThreadPool.Create;
-
 finalization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 最終化
-
-     _ThreadPool_.Free;
 
 end. //######################################################################### ■
