@@ -63,7 +63,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     _Detect := THaarCascade.Create( '..\..\_DATA\Cascade\Haar\haarcascade_frontalface_default.xml' );
+     _Detect := THaarCascade.Create( '..\..\_LIBRARY\LUXOPHIA\LUX.Vision.OpenCV\'
+                                   + '：Laex\Delphi-OpenCV\resource\facedetectxml\'
+                                   + 'haarcascade_frontalface_default.xml' );
 
      with Image1.Bitmap do
      begin
