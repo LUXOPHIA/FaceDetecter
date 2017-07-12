@@ -3,7 +3,7 @@
         <ProjectGuid>{ED485C95-69F2-4FAC-9F64-1BE105F4F90C}</ProjectGuid>
         <ProjectVersion>18.2</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
-        <MainSource>FaceDetect.dpr</MainSource>
+        <MainSource>FaceDetecter.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -66,7 +66,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <SanitizedProjectName>FaceDetect</SanitizedProjectName>
+        <SanitizedProjectName>FaceDetecter</SanitizedProjectName>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
@@ -269,7 +269,7 @@
                     <VersionInfoKeys Name="CFBundleDevelopmentRegion"/>
                 </VersionInfoKeys>
                 <Source>
-                    <Source Name="MainSource">FaceDetect.dpr</Source>
+                    <Source Name="MainSource">FaceDetecter.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
@@ -278,9 +278,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\FaceDetect.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win64\Debug\FaceDetecter.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>FaceDetect.exe</RemoteName>
+                        <RemoteName>FaceDetecter.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -294,9 +294,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\FaceDetect.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\FaceDetecter.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>FaceDetect.exe</RemoteName>
+                        <RemoteName>FaceDetecter.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -305,15 +305,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\FaceDetect.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="Win64\Debug\FaceDetecter.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
-                        <RemoteName>FaceDetect.rsm</RemoteName>
+                        <RemoteName>FaceDetecter.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Release\FaceDetect.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="Win64\Release\FaceDetecter.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>FaceDetect.exe</RemoteName>
+                        <RemoteName>FaceDetecter.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -1,4 +1,4 @@
-﻿program FaceDetect;
+﻿program FaceDetecter;
 
 uses
   FMX.Forms,
