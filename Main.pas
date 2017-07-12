@@ -67,6 +67,14 @@ begin
                                    + '：Laex\Delphi-OpenCV\resource\facedetectxml\'
                                    + 'haarcascade_frontalface_default.xml' );
 
+     with _Detect do
+     begin
+          MinSizeX :=   8;
+          MinSizeY :=   8;
+          MaxSizeX := 128;
+          MaxSizeY := 128;
+     end;
+
      with Image1.Bitmap do
      begin
           LoadFromFile( '..\..\_DATA\Faces.jpg' );
